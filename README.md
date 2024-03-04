@@ -49,17 +49,37 @@ Set valid `git` configuration
 
 #### Create bootable MPU SD Card Image
 
-Download [OpenSTLinux starter package](https://www.st.com/en/embedded-software/stm32mp1starter.html) to create a bootable SD card with a base software configuration.  
+Download [OpenSTLinux starter package](https://www.st.com/en/embedded-software/stm32mp1starter.html) to create a bootable SD card with a base software configuration. Unzip the flash image 
+
+```bash
+tar xvf en.flash-stm32mp1-openstlinux-6.1-yocto-mickledore-mp1-v23.06.21.tar.gz
+```
+
 Follow the instructions on the STMicroelectronics wiki page [Populate the target and boot the image](https://wiki.st.com/stm32mpu/wiki/Getting_started/STM32MP1_boards/STM32MP157x-DK2/Let%27s_start/Populate_the_target_and_boot_the_image)
 
 > Becuase the STM32CubeProgrammer is available on multiple platforms, you can use the starter package to create a bootable SD card even if you do not have access to a Linux machine, for example, using a Windows machine.
 
-Quick instructions are given below
+The above instructions talk about flashing the card mounted in the STM32MP board using the STM32CubeProgrammer.
+The following method discusses about flashing the SD card directly by inserting it into a card reader/writer using the Linux PC. This faster but more involved (and risky if you don't know what you are doing). Instructions are given below: 
 
-Unzip the flash image 
+Create a Card Image file
 
 ```bash
-tar xvf en.flash-stm32mp1-openstlinux-6.1-yocto-mickledore-mp1-v23.06.21.tar.gz
+cd stm32mp1-openstlinux-6.1-yocto-mickledore-mp1-v23.06.21/images/stm32mp1
+chmod +x scripts/create_sdcard_from_flashlayout.sh 
+scripts/create_sdcard_from_flashlayout.sh <path of flash_layout .tsv file>
+# Example scripts/create_sdcard_from_flashlayout.sh flashlayout_st-image-weston/optee/FlashLayout_sdcard_stm32mp157f-dk2-optee.tsv
+```
+
+First identify the card device path of the SD card on your computer (**Critical Step**) using `lsblk` command, the card would be something like `/dev/sda`
+
+```bash
+# Unmount the partitions of the SD Card
+sudo umount <card_device_path>
+# Example sudo umount /dev/sdb/*
+
+sudo dd if=<Flash_Image_file> of=<card_device_path> bs=8M conv=fdatasync status=progress
+# Example: sudo dd if=FlashLayout_sdcard_stm32mp157f-dk2-optee.raw of=/dev/sdb bs=8M conv=fdatasync status=progress
 ```
 
 View the console logs over UART (ST-Link) port of the MPU board
