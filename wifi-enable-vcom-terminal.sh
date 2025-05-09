@@ -1,9 +1,9 @@
 #!/bin/sh
 
 # Assign command-line arguments to variables
-SSID_OF_NETWORK="SSID"
-PASSWORD_OF_NETWORK="Password"
-HOSTNAME="hostname"
+SSID_OF_NETWORK="ssid"
+PASSWORD_OF_NETWORK="password"
+HOSTNAME="rbt15"
 
 cd ~
 
@@ -49,3 +49,14 @@ EOF
 chmod +x setup_wifi.sh
 ./setup_wifi.sh
 rm setup_wifi.sh
+
+# Copy the setup script to the STM32MP board
+#scp setup_wifi.sh root@$IP_ADDRESS:/root/
+
+# SSH into the STM32MP board and execute the script
+#ssh root@$IP_ADDRESS <<'EOF'
+#chmod +x /root/setup_wifi.sh
+#sudo /root/setup_wifi.sh
+#EOF
+
+#echo "WiFi setup script executed on STM32MP board."
