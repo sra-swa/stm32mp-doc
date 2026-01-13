@@ -1,4 +1,4 @@
-# STM32MP2 Development
+# STM32MP1 Development
 
 ## Setting up STM32MP Development environment
 
@@ -54,7 +54,7 @@ Set valid `git` configuration
 Download [OpenSTLinux starter package](https://www.st.com/en/embedded-software/stm32mp1starter.html) to create a bootable SD card with a base software configuration. Unzip the flash image 
 
 ```bash
-tar xvf FLASH-stm32mp2-openstlinux-6.6-yocto-scarthgap-mpu-v25.06.11.tar.gz
+tar xvf FLASH-stm32mp1-openstlinux-6.6-yocto-scarthgap-mpu-v25.06.11.tar.gz
 ```
 
 Follow the instructions on the STMicroelectronics wiki page [Populate the target and boot the image](https://wiki.st.com/stm32mpu/wiki/Getting_started/STM32MP1_boards/STM32MP157x-DK2/Let%27s_start/Populate_the_target_and_boot_the_image)
@@ -67,10 +67,10 @@ The following method discusses about flashing the SD card directly by inserting 
 Create a Card Image file
 
 ```bash
-cd stm32mp2-openstlinux-6.6-yocto-scarthgap-mpu-v25.06.11/images/stm32mp2
+cd stm32mp1-openstlinux-6.6-yocto-scarthgap-mpu-v25.06.11/images/stm32mp1
 chmod +x scripts/create_sdcard_from_flashlayout.sh 
 scripts/create_sdcard_from_flashlayout.sh <path of flash_layout .tsv file>
-# Example scripts/create_sdcard_from_flashlayout.sh flashlayout_st-image-weston/optee/FlashLayout_sdcard_stm32mp257f-dk-optee.tsv
+# Example scripts/create_sdcard_from_flashlayout.sh flashlayout_st-image-weston/optee/FlashLayout_sdcard_stm32mp157f-dk2-optee.tsv
 ```
 
 First identify the card device path of the SD card on your computer (**Critical Step**) using `lsblk` command, the card would be something like `/dev/sda`
@@ -81,7 +81,7 @@ sudo umount <card_device_path>
 # Example sudo umount /dev/sdb/*
 
 sudo dd if=<Flash_Image_file> of=<card_device_path> bs=8M conv=fdatasync status=progress
-# Example: sudo dd if=FlashLayout_sdcard_stm32mp257f-dk-optee.raw of=/dev/sdb bs=8M conv=fdatasync status=progress
+# Example: sudo dd if=FlashLayout_sdcard_stm32mp157f-dk-optee.raw of=/dev/sdb bs=8M conv=fdatasync status=progress
 ```
 
 View the console logs over UART (ST-Link) port of the MPU board
@@ -103,23 +103,23 @@ Extract both of the packages and install the SDK using the following commands, r
 ```bash
 
 tar xvf SOURCES-stm32mp-openstlinux-6.6-yocto-scarthgap-mpu-v25.06.11.tar.gz
-tar xvf SDK-x86_64-stm32mp2-openstlinux-6.6-yocto-scarthgap-mpu-v25.06.11.tar.gz
-mkdir -p ~/stmpu/ostl6.1/sdk-mp2
-mkdir -p ~/stmpu/ostl6.1/src-mp2
+tar xvf SDK-x86_64-stm32mp1-openstlinux-6.6-yocto-scarthgap-mpu-v25.06.11.tar.gz
+mkdir -p ~/stmpu/ostl6.1/sdk-mp1
+mkdir -p ~/stmpu/ostl6.1/src-mp1
 
-cp -r cp -r stm32mp-openstlinux-6.6-yocto-scarthgap-mpu-v25.06.11/sources/ostl-linux/linux-stm32mp-6.6.78-stm32mp-r2-r0/*  ~/stmpu/ostl6.1/src-mp2/
+cp -r cp -r stm32mp-openstlinux-6.6-yocto-scarthgap-mpu-v25.06.11/sources/ostl-linux/linux-stm32mp-6.6.78-stm32mp-r2-r0/*  ~/stmpu/ostl6.1/src-mp1/
 
-chmod +x stm32mp2-openstlinux-6.6-yocto-scarthgap-mpu-v25.06.11/sdk/st-image-weston-openstlinux-weston-stm32mp2.rootfs-x86_64-toolchain-5.0.8-openstlinux-6.6-yocto-scarthgap-mpu-v25.06.11.sh
+chmod +x stm32mp1-openstlinux-6.6-yocto-scarthgap-mpu-v25.06.11/sdk/st-image-weston-openstlinux-weston-stm32mp1.rootfs-x86_64-toolchain-5.0.8-openstlinux-6.6-yocto-scarthgap-mpu-v25.06.11.sh
 
-yes | stm32mp2-openstlinux-6.6-yocto-scarthgap-mpu-v25.06.11/sdk/st-image-weston-openstlinux-weston-stm32mp2.rootfs-x86_64-toolchain-5.0.8-openstlinux-6.6-yocto-scarthgap-mpu-v25.06.11.sh -d ~/stmpu/ostl6.1/sdk-mp2/
+yes | stm32mp1-openstlinux-6.6-yocto-scarthgap-mpu-v25.06.11/sdk/st-image-weston-openstlinux-weston-stm32mp1.rootfs-x86_64-toolchain-5.0.8-openstlinux-6.6-yocto-scarthgap-mpu-v25.06.11.sh -d ~/stmpu/ostl6.1/sdk-mp1/
 
-rm -r stm32mp2-openstlinux-6.6-yocto-scarthgap-mpu-v25.06.11
+rm -r stm32mp1-openstlinux-6.6-yocto-scarthgap-mpu-v25.06.11
 
 echo 
-echo "Linux sources are installed in ~/stmpu/ostl6.1/src-mp2"
+echo "Linux sources are installed in ~/stmpu/ostl6.1/src-mp1"
 echo
-echo "SDK is installed in ~/stmpu/ostl6.1/sdk-mp2, you can run it using activate it using following command"
-echo "source ~/stmpu/ostl6.1/sdk-mp2/environment-setup-cortexa35-ostl-linux"
+echo "SDK is installed in ~/stmpu/ostl6.1/sdk-mp1, you can run it using activate it using following command"
+echo "source ~/stmpu/ostl6.1/sdk-mp1/environment-setup-cortexa7t2hf-neon-vfpv4-ostl-linux-gnueabi"
 echo 
 ```
 
@@ -127,7 +127,7 @@ echo
 
 The following step would compile the Linux kernel and also create dtbs (device tree blobs) for a board
 
-Navigate to `~/stmpu/ostl6.1/src-mp2`
+Navigate to `~/stmpu/ostl6.1/src-mp1`
 create folder `ptch_<name of the package>` and copy the package specific patches and fragments there
 e.g. `ptch_msp1`
 
@@ -135,7 +135,7 @@ Run the following script (*update the package name and board IP address in first
 *Update the 3rd and 4th line* if your SDK or Linux sources are installed in some place other than indicated in this guide.
 
 ```bash
-source /stmpu/ostl6.1/sdk-mp2/environment-setup-cortexa35-ostl-linux
+source /stmpu/ostl6.1/sdk-mp1/environment-setup-cortexa7t2hf-neon-vfpv4-ostl-linux-gnueabi
 
 export PARALLEL_JOBS=32
 export PACKAGE_NAME="evg1"
@@ -144,7 +144,7 @@ export BOARD_IP="evg11.local"
 export OUTPUT_BUILD_DIR=$PWD/../build_${PACKAGE_NAME}
 [ "${ARCH}" = "arm" ] && imgtarget="uImage" || imgtarget="Image.gz"
 export IMAGE_KERNEL=${imgtarget}
-export LOAD_ADDRESS="0x88008000"
+export LOAD_ADDRESS="0xC2000040"
 
 
 # Extract Linux sources and rename folder specific to the package name
